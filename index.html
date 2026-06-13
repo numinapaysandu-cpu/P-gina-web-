@@ -5,31 +5,403 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NÜMIA | Ropa Interior</title>
     <style>
-        /* Estilos básicos para que se vea bien en el celu */
-        body { font-family: sans-serif; text-align: center; padding: 20px; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 10% auto; padding: 20px; width: 80%; border-radius: 10px; }
-        .product-card { border: 1px solid #ddd; margin: 10px; padding: 10px; border-radius: 8px; }
-        .buy-btn { background: #25d366; color: white; padding: 10px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #faf8fc;
+            color: #4a4a4a;
+            padding-bottom: 100px;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 30px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eadef7;
+            box-shadow: 0 2px 10px rgba(162, 131, 219, 0.05);
+        }
+
+        header h1 {
+            font-size: 28px;
+            color: #2a2a2a;
+            letter-spacing: 4px;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 13px;
+            color: #8b7ca2;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .categories-container {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            padding: 12px 0;
+            z-index: 10;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid #ebdff9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            -webkit-overflow-scrolling: touch;
+            text-align: center;
+        }
+
+        .categories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            display: inline-block;
+            background: #f5edf1;
+            color: #7b6a93;
+            padding: 10px 20px;
+            margin: 0 6px;
+            border-radius: 25px;
+            border: 1px solid #e4daf2;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: #a283db;
+            color: #ffffff;
+            border-color: #a283db;
+            box-shadow: 0 3px 8px rgba(162, 131, 219, 0.3);
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .products-section {
+            display: none;
+        }
+
+        .products-section.active {
+            display: block;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 1px solid #efeaf6;
+            box-shadow: 0 4px 15px rgba(162, 131, 219, 0.04);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            background-color: #f6f3f9;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid #f1eaf7;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 6px;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: #7a7a7a;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #845ec2;
+            font-weight: 700;
+        }
+
+        .btn-add {
+            background-color: #a283db;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            border-top: 1px solid #ebdff9;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .cart-summary {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 12px;
+            color: #8b7ca2;
+        }
+
+        .cart-total {
+            font-size: 19px;
+            font-weight: 700;
+            color: #333333;
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        .btn-whatsapp.disabled {
+            background-color: #e0dbec;
+            color: #a6a1b5;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4e367c;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>NÜMIA</h1>
-        <p>Prendas de vestir</p>
+        <p>Ropa Interior & Lencería</p>
     </header>
 
-    <button onclick="openModal('modal-catalogo')">Ver Catálogo</button>
+    <div class="toast" id="toast">Agregado a tu selección</div>
 
-    <div id="modal-catalogo" class="modal">
-        <div class="modal-content">
-            <span onclick="closeModal('modal-catalogo')" style="float:right; cursor:pointer;">&times;</span>
-            <h2>Catálogo</h2>
-            <div class="products-grid"></div>
-        </div>
+    <div class="categories-container">
+        <button class="category-btn active" onclick="switchCategory('conjuntos')">Conjuntos</button>
+        <button class="category-btn" onclick="switchCategory('bombachas')">Bombachas / Less</button>
+        <button class="category-btn" onclick="switchCategory('soutienes')">Soutienes</button>
+        <button class="category-btn" onclick="switchCategory('medias')">Medias / Soquetes</button>
+        <button class="category-btn" onclick="switchCategory('dormir')">Línea Dormir</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="container">
+        <div id="cat-conjuntos" class="products-section active"></div>
+        <div id="cat-bombachas" class="products-section"></div>
+        <div id="cat-soutienes" class="products-section"></div>
+        <div id="cat-medias" class="products-section"></div>
+        <div id="cat-dormir" class="products-section"></div>
+    </div>
+
+    <div class="cart-bar">
+        <div class="cart-summary">
+            <span class="cart-count" id="cart-count">0 prendas</span>
+            <span class="cart-total" id="cart-total">Total: $0</span>
+        </div>
+        <a href="#" id="whatsapp-link" class="btn-whatsapp disabled" target="_blank" onclick="sendOrder(event)">
+            Enviar Pedido
+        </a>
+    </div>
+
+    <script>
+        const BIN_ID = "6a28d3aff5f4af5e29d5ae82"; 
+        const JSON_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        const MASTER_KEY = "$2a$10$qiyVtGY2eFG68QFFYJo2/.me5EmiyQdWsnrAHrXL5UZaXuSJKrwpW"; 
+        const WHATSAPP_PHONE = "59898808548"; 
+
+        const backupCatalogData = {
+            conjuntos: [
+                { id: "co1", name: "Conjunto Encaje con Bralette", desc: "Delicado bralette de encaje con colaless regulable.", price: 790, img: "https://images.unsplash.com/photo-1616952807090-ffb559779fdf?w=600&auto=format&fit=crop&q=80" },
+                { id: "co2", name: "Conjunto Algodón Sport", desc: "Corpiño deportivo y culotte de algodón premium.", price: 650, img: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=600&auto=format&fit=crop&q=80" },
+                { id: "co3", name: "Conjunto Raso Romántico", desc: "Detalles de puntilla, tazas armadas soft.", price: 890, img: "https://images.unsplash.com/photo-1615396899839-c99c121888b0?w=600&auto=format&fit=crop&q=80" },
+                { id: "co4", name: "Conjunto Tul Transparencias", desc: "Diseño moderno con breteles dobles ajustables.", price: 750, img: "https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?w=600&auto=format&fit=crop&q=80" }
+            ],
+            bombachas: [
+                { id: "bo1", name: "Cola Less de Encaje", desc: "Talles del M al XL. Varios tonos disponibles.", price: 190, img: "https://images.unsplash.com/photo-1616952807044-67258380e90c?w=600&auto=format&fit=crop&q=80" },
+                { id: "bo2", name: "Bikini de Algodón Florcitas", desc: "Estampado clásico calce cómodo para el día.", price: 160, img: "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?w=600&auto=format&fit=crop&q=80" }
+            ],
+            soutienes: [
+                { id: "so1", name: "Soutien Lycra con Encaje", desc: "Detalles de encaje fino trabajados en frente y espalda.", price: 490, img: "https://images.unsplash.com/photo-1594934984185-da94f061b476?w=600&auto=format&fit=crop&q=80" },
+                { id: "so2", name: "Corpiño Algodón Sin Aro", desc: "Tazas desmontables, máxima libertad diaria.", price: 390, img: "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?w=600&auto=format&fit=crop&q=80" }
+            ],
+            medias: [
+                { id: "me1", name: "Medias Gruesas Individuales", desc: "Varios colores.", price: 60, img: "https://drive.google.com/uc?export=view&id=18emafbKd8VQ96YmzhRKSAZukEuEYs5Eq" },
+                { id: "me2", name: "Medias Gruesas Pack por tres", desc: "Colores surtidos.", price: 170, img: "https://drive.google.com/uc?export=view&id=1rJyIaWrx00cm96rkG1CO-WLqw7SKjUfx" },
+                { id: "me3", name: "Zoquetes Capibara", desc: "Varios diseños.", price: 50, img: "https://drive.google.com/uc?export=view&id=1ldEm4waYfocnUhzbySU8PBTbNTxa1bv6" },
+                { id: "me4", name: "Zoquetes Individuales", desc: "Varios colores.", price: 50, img: "https://drive.google.com/uc?export=view&id=1fobHQ6Ryhi1XFCckVtX3XXaEFAfG0O7S" }
+            ],
+            dormir: [
+                { id: "do1", name: "Pijama Satén Short y Musculosa", desc: "Prenda fresca y elegante con detalles de vivos blancos.", price: 980, img: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600&auto=format&fit=crop&q=80" },
+                { id: "do2", name: "Camisolín de Raso y Puntilla", desc: "Breteles finos regulables, caída espectacular.", price: 790, img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&auto=format&fit=crop&q=80" }
+            ]
+        };
+
+        let catalogData = backupCatalogData; 
+        let cart = [];
+
+        function renderCatalog() {
+            const categories = ['conjuntos', 'bombachas', 'soutienes', 'medias', 'dormir'];
+            categories.forEach(category => {
+                const container = document.getElementById(`cat-${category}`);
+                if (!container) return;
+                
+                const products = catalogData[category] || [];
+                let html = "";
+                
+                products.forEach(p => {
+                    html += `
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('${p.img}');"></div>
+                            <div class="product-info">
+                                <div class="product-title">${p.name}</div>
+                                <div class="product-desc">${p.desc}</div>
+                                <div class="product-meta">
+                                    <div class="product-price">$ ${p.price}</div>
+                                    <button class="btn-add" onclick="addToCart('${p.name}', ${p.price})">Agregar</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        async function loadCatalogFromRemote() {
+            try {
+                const response = await fetch(JSON_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': MASTER_KEY,
+                        'X-Bin-Meta': 'false'
+                    }
+                });
+                
+                if (response.ok) {
+                    const remoteData = await response.json();
+                    if (remoteData && remoteData.conjuntos) {
+                        catalogData = remoteData;
+                        renderCatalog();
+                        console.log("Datos remotos aplicados.");
+                    }
+                }
+            } catch (error) {
+                console.log("Manteniendo catálogo local seguro.");
+            }
+        }
+
+        function switchCategory(categoryName) {
+            document.querySelectorAll('.products-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(el => el.classList.remove('active'));
+            
+            const targetSection = document.getElementById(`cat-${categoryName}`);
+            if (targetSection) targetSection.classList.add('active');
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1200);
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+            const wsLink = document.getElementById('whatsapp-link');
+
+            countEl.innerText = `${cart.length} ${cart.length === 1 ? 'prenda' : 'prendas'}`;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalEl.innerText = `Total: $${total}`;
+
+            if (cart.length > 0) {
+                wsLink.classList.remove('disabled');
+            } else {
+                wsLink.classList.add('disabled');
+            }
+        }
+
+        function sendOrder(e) {
+            if (cart.length === 0) {
+                e.preventDefault();
+                return;
+            }
+
+            let itemCounts = {};
+            cart.forEach(item => itemCounts[item.name] = (itemCounts[item.name] || 0) + 1);
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            let text = "*¡Hola NÜMIA! Me gustaría consultar disponibilidad por el siguiente pedido:*\n\n";
+            for (const [name, qty] of Object.entries(itemCounts)) {
+                text += `• *${qty}x* ${name}\n`;
+            }
+            text += `\nTotal estimado: *$${total}*\n\n_Catálogo Online Nümia._`;
+
+            document.getElementById('whatsapp-link').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+        }
+
+        renderCatalog();
+        loadCatalogFromRemote();
+    </script>
 </body>
 </html>
