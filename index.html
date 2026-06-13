@@ -5,61 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo Numia</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: auto; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-        .card img { max-width: 100%; height: 200px; object-fit: cover; border-radius: 5px; }
-        h2 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { text-align: center; color: #d63384; }
+        .category-section { margin-bottom: 40px; }
+        h2 { border-bottom: 2px solid #d63384; padding-bottom: 10px; color: #444; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .card img { max-width: 100%; height: 250px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .card h3 { margin: 10px 0; font-size: 1.1em; }
+        .card p { font-size: 0.9em; color: #666; margin: 5px 0; }
+        .price { font-weight: bold; color: #d63384; font-size: 1.2em; margin: 10px 0; }
+        .btn-wpp { background-color: #25d366; color: white; padding: 10px; border-radius: 20px; text-decoration: none; font-weight: bold; margin-top: 10px; display: block; }
+        .btn-wpp:hover { background-color: #128c7e; }
     </style>
 </head>
 <body>
 
-<div class="container" id="app">
+<div class="container">
     <h1>Catálogo Numia</h1>
     <div id="catalog"></div>
 </div>
 
 <script>
-    // Tu base de datos actualizada
     const backupCatalogData = {
         conjuntos: [
-            { id: "co1", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", price: 250, img: "images/30060.jpg" },
-            { id: "co2", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", price: 250, img: "images/30061.jpg" },
-            { id: "co3", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", price: 250, img: "images/30062.jpg" }
+            { id: "co1", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30060.jpg" },
+            { id: "co2", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30061.jpg" },
+            { id: "co3", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30062.jpg" }
         ],
         bombachas: [
-            { id: "bo1", name: "Less de encaje", desc: "Talles: M - XL<br>Colores: Negro, Rosa viejo, Azul, Gris, Bordó, Blanco", price: 120, img: "images/30066.jpg" },
-            { id: "bo2", name: "Less de encaje", desc: "Talles: M - XL<br>Colores: Negro, Rosa viejo, Azul, Gris, Bordó, Blanco", price: 120, img: "images/30067.jpg" },
+            { id: "bo1", name: "Less de encaje", desc: "Talles: M - XL", price: 120, img: "images/30066.jpg" },
+            { id: "bo2", name: "Less de encaje", desc: "Talles: M - XL", price: 120, img: "images/30067.jpg" },
             { id: "bo3", name: "Less lisa 100% algodón", desc: "Talles: M al XL", price: 100, img: "images/30068.jpg" },
-            { id: "bo4", name: "Bikinis de algodón con puntilla", desc: "Talles: M al XL<br>Colores: Blanco, Negro, Lila, Fucsia, Celeste, Verde agua, Beige", price: 130, img: "images/bikini.jpg" }
+            { id: "bo4", name: "Bikinis de algodón con puntilla", desc: "Talles: M al XL", price: 130, img: "images/bikini.jpg" }
         ],
         medias: [
-            { id: "me1", name: "Medias infantiles", desc: "Varios motivos<br>Pack: 3 pares por $100", price: 100, img: "89b519b9e8134dd884570cd0646ff405_2.png" },
-            { id: "me2", name: "Medias gruesas", desc: "Varios colores<br>Pack: 3 pares por $170", price: 170, img: "Gemini_Generated_Image_br1myfbr1myfbr1m.png" },
-            { id: "me3", name: "Medias capibara", desc: "Varios diseños<br>Precio por par: $50", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" },
-            { id: "me4", name: "Zoquetes comunes", desc: "Varios colores<br>Precio por par: $50", price: 50, img: "Gemini_Generated_Image_r4mp9hr4mp9hr4mp.png" },
-            { id: "me5", name: "Medias gruesas individuales", desc: "Varios colores<br>Precio por par: $60", price: 60, img: "Medias gruesas individuales.png" }
+            { id: "me1", name: "Medias infantiles", desc: "Pack 3 pares", price: 100, img: "89b519b9e8134dd884570cd0646ff405_2.png" },
+            { id: "me2", name: "Medias gruesas", desc: "Pack 3 pares", price: 170, img: "Gemini_Generated_Image_br1myfbr1myfbr1m.png" },
+            { id: "me3", name: "Medias capibara", desc: "Precio por par", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" },
+            { id: "me4", name: "Zoquetes comunes", desc: "Precio por par", price: 50, img: "Gemini_Generated_Image_r4mp9hr4mp9hr4mp.png" },
+            { id: "me5", name: "Medias gruesas individuales", desc: "Precio por par", price: 60, img: "Medias gruesas individuales.png" }
         ]
     };
 
-    // Lógica para renderizar el catálogo
     const catalogContainer = document.getElementById('catalog');
+    const myPhoneNumber = "59899XXXXXXX"; // <--- ¡CAMBIA ESTO POR TU NÚMERO!
 
     for (const category in backupCatalogData) {
         const section = document.createElement('section');
+        section.className = 'category-section';
         section.innerHTML = `<h2>${category.toUpperCase()}</h2><div class="product-grid" id="${category}"></div>`;
         catalogContainer.appendChild(section);
 
         const grid = document.getElementById(category);
         backupCatalogData[category].forEach(item => {
+            const wppMessage = encodeURIComponent(`Hola, quiero pedir: ${item.name}`);
+            const wppLink = `https://wa.me/${myPhoneNumber}?text=${wppMessage}`;
+            
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <img src="${item.img}" alt="${item.name}">
                 <h3>${item.name}</h3>
                 <p>${item.desc}</p>
-                <p><strong>$${item.price}</strong></p>
+                <div class="price">$${item.price}</div>
+                <a href="${wppLink}" target="_blank" class="btn-wpp">Pedir por WhatsApp</a>
             `;
             grid.appendChild(card);
         });
