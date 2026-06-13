@@ -3,79 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Numia</title>
+    <title>NÜMIA | Ropa Interior</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
-        h1 { text-align: center; color: #d63384; }
-        .category-section { margin-bottom: 40px; }
-        h2 { border-bottom: 2px solid #d63384; padding-bottom: 10px; color: #444; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
-        .card img { max-width: 100%; height: 250px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        .card h3 { margin: 10px 0; font-size: 1.1em; }
-        .card p { font-size: 0.9em; color: #666; margin: 5px 0; }
-        .price { font-weight: bold; color: #d63384; font-size: 1.2em; margin: 10px 0; }
-        .btn-wpp { background-color: #25d366; color: white; padding: 10px; border-radius: 20px; text-decoration: none; font-weight: bold; margin-top: 10px; display: block; }
-        .btn-wpp:hover { background-color: #128c7e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: #faf8fc; color: #4a4a4a; padding-bottom: 100px; }
+        header { background-color: #ffffff; padding: 30px 15px; text-align: center; border-bottom: 1px solid #eadef7; box-shadow: 0 2px 10px rgba(162, 131, 219, 0.05); }
+        header h1 { font-size: 28px; color: #2a2a2a; letter-spacing: 4px; font-weight: 400; text-transform: uppercase; margin-bottom: 5px; }
+        header p { font-size: 13px; color: #8b7ca2; text-transform: uppercase; letter-spacing: 2px; }
+        .categories-container { position: sticky; top: 0; background-color: #ffffff; padding: 12px 0; z-index: 10; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid #ebdff9; box-shadow: 0 4px 12px rgba(0,0,0,0.02); -webkit-overflow-scrolling: touch; text-align: center; }
+        .categories-container::-webkit-scrollbar { display: none; }
+        .category-btn { display: inline-block; background: #f5edf1; color: #7b6a93; padding: 10px 20px; margin: 0 6px; border-radius: 25px; border: 1px solid #e4daf2; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+        .category-btn.active { background: #a283db; color: #ffffff; border-color: #a283db; box-shadow: 0 3px 8px rgba(162, 131, 219, 0.3); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+        .products-section { display: none; }
+        .products-section.active { display: block; }
+        .product-card { background: #ffffff; border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid #efeaf6; box-shadow: 0 4px 15px rgba(162, 131, 219, 0.04); }
+        .product-image { width: 100%; height: 280px; background-color: #f6f3f9; background-size: cover; background-position: center; border-bottom: 1px solid #f1eaf7; }
+        .product-info { padding: 20px; }
+        .product-title { font-size: 17px; font-weight: 600; color: #333333; margin-bottom: 6px; }
+        .product-desc { font-size: 13px; color: #7a7a7a; margin-bottom: 15px; line-height: 1.4; }
+        .product-meta { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 18px; color: #845ec2; font-weight: 700; }
+        .btn-add { background-color: #a283db; color: #ffffff; padding: 10px 20px; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px; transition: background 0.2s; }
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #ffffff; border-top: 1px solid #ebdff9; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 100; box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.04); }
+        .cart-summary { display: flex; flex-direction: column; }
+        .cart-count { font-size: 12px; color: #8b7ca2; }
+        .cart-total { font-size: 19px; font-weight: 700; color: #333333; }
+        .btn-whatsapp { background-color: #25d366; color: white; text-decoration: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+        .btn-whatsapp.disabled { background-color: #e0dbec; color: #a6a1b5; pointer-events: none; box-shadow: none; }
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background-color: #4e367c; color: white; padding: 10px 24px; border-radius: 20px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; z-index: 1000; }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
+    <header>
+        <h1>NÜMIA</h1>
+        <p>Ropa Interior & Lencería</p>
+    </header>
+    <div class="toast" id="toast">Agregado a tu selección</div>
+    <div class="categories-container">
+        <button class="category-btn active" onclick="switchCategory('conjuntos')">Conjuntos</button>
+        <button class="category-btn" onclick="switchCategory('bombachas')">Bombachas / Less</button>
+        <button class="category-btn" onclick="switchCategory('soutienes')">Soutienes</button>
+        <button class="category-btn" onclick="switchCategory('medias')">Medias / Soquetes</button>
+        <button class="category-btn" onclick="switchCategory('dormir')">Línea Dormir</button>
+    </div>
+    <div class="container">
+        <div id="cat-conjuntos" class="products-section active"></div>
+        <div id="cat-bombachas" class="products-section"></div>
+        <div id="cat-soutienes" class="products-section"></div>
+        <div id="cat-medias" class="products-section"></div>
+        <div id="cat-dormir" class="products-section"></div>
+    </div>
+    <div class="cart-bar">
+        <div class="cart-summary">
+            <span class="cart-count" id="cart-count">0 prendas</span>
+            <span class="cart-total" id="cart-total">Total: $0</span>
+        </div>
+        <a href="#" id="whatsapp-link" class="btn-whatsapp disabled" target="_blank" onclick="sendOrder(event)">Enviar Pedido</a>
+    </div>
+    <script>
+        const WHATSAPP_PHONE = "59898808548"; 
 
-<div class="container">
-    <h1>Catálogo Numia</h1>
-    <div id="catalog"></div>
-</div>
+        const backupCatalogData = {
+            conjuntos: [
+                { id: "co1", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige (negro agotado)", price: 250, img: "https://i.ibb.co/65yYXSY/30060.jpg" },
+                { id: "co2", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige (negro agotado)", price: 250, img: "https://i.ibb.co/84KbsCBk/30061.jpg" },
+                { id: "co3", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige (negro agotado)", price: 250, img: "https://i.ibb.co/399nRY0J/30062.jpg" }
+            ],
+            bombachas: [
+                { id: "bo1", name: "Less de encaje", desc: "Talles: M - XL<br>Colores: Negro, Rosa viejo, Azul, Gris, Bordó, Blanco, Rosado, Celeste", price: 120, img: "https://i.ibb.co/QFFhWpym/30066.jpg" },
+                { id: "bo2", name: "Less de encaje", desc: "Talles: M - XL<br>Colores: Negro, Rosa viejo, Azul, Gris, Bordó, Blanco, Rosado, Celeste", price: 120, img: "https://i.ibb.co/TB7sc6g8/30067.jpg" },
+                { id: "bo3", name: "Less lisa 100% algodón", desc: "Talles: M al XL", price: 100, img: "https://i.ibb.co/99V4ffzB/30068.jpg" }
+            ],
+            soutienes: [
+                { id: "so1", name: "Soutien Lycra con Encaje", desc: "Detalles de encaje fino.", price: 490, img: "https://images.unsplash.com/photo-1594934984185-da94f061b476?w=600&auto=format&fit=crop&q=80" }
+            ],
+            medias: [
+                { id: "me1", name: "Medias infantiles", desc: "Varios motivos<br>Pack: 3 pares por $100", price: 100, img: "89b519b9e8134dd884570cd0646ff405_2.png" },
+                { id: "me2", name: "Medias gruesas", desc: "Varios colores<br>Pack: 3 pares por $170", price: 170, img: "Gemini_Generated_Image_br1myfbr1myfbr1m.png" },
+                { id: "me3", name: "Medias capibara", desc: "Varios diseños<br>Precio por par: $50", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" },
+                { id: "me4", name: "Zoquetes comunes", desc: "Varios colores<br>Precio por par: $50", price: 50, img: "Gemini_Generated_Image_r4mp9hr4mp9hr4mp.png" },
+                { id: "me5", name: "Medias gruesas individuales", desc: "Varios colores<br>Precio por par: $60", price: 60, img: "Medias gruesas individuales.png" }
+            ],
+            dormir: [
+                { id: "do1", name: "Pijama Satén Short y Musculosa", desc: "Prenda fresca y elegante.", price: 980, img: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600&auto=format&fit=crop&q=80" }
+            ]
+        };
 
-<script>
-    const backupCatalogData = {
-        conjuntos: [
-            { id: "co1", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30060.jpg" },
-            { id: "co2", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30061.jpg" },
-            { id: "co3", name: "Conjunto de encaje con bralette", desc: "Talle: M - Colores: Morado y beige", price: 250, img: "images/30062.jpg" }
-        ],
-        bombachas: [
-            { id: "bo1", name: "Less de encaje", desc: "Talles: M - XL", price: 120, img: "images/30066.jpg" },
-            { id: "bo2", name: "Less de encaje", desc: "Talles: M - XL", price: 120, img: "images/30067.jpg" },
-            { id: "bo3", name: "Less lisa 100% algodón", desc: "Talles: M al XL", price: 100, img: "images/30068.jpg" },
-            { id: "bo4", name: "Bikinis de algodón con puntilla", desc: "Talles: M al XL", price: 130, img: "images/bikini.jpg" }
-        ],
-        medias: [
-            { id: "me1", name: "Medias infantiles", desc: "Pack 3 pares", price: 100, img: "89b519b9e8134dd884570cd0646ff405_2.png" },
-            { id: "me2", name: "Medias gruesas", desc: "Pack 3 pares", price: 170, img: "Gemini_Generated_Image_br1myfbr1myfbr1m.png" },
-            { id: "me3", name: "Medias capibara", desc: "Precio por par", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" },
-            { id: "me4", name: "Zoquetes comunes", desc: "Precio por par", price: 50, img: "Gemini_Generated_Image_r4mp9hr4mp9hr4mp.png" },
-            { id: "me5", name: "Medias gruesas individuales", desc: "Precio por par", price: 60, img: "Medias gruesas individuales.png" }
-        ]
-    };
+        let catalogData = backupCatalogData; 
+        let cart = [];
+        
+        function renderCatalog() {
+            const categories = ['conjuntos', 'bombachas', 'soutienes', 'medias', 'dormir'];
+            categories.forEach(category => {
+                const container = document.getElementById(`cat-${category}`);
+                if (!container) return;
+                const products = catalogData[category] || [];
+                let html = "";
+                products.forEach(p => {
+                    html += `<div class="product-card"><div class="product-image" style="background-image: url('${p.img}');"></div><div class="product-info"><div class="product-title">${p.name}</div><div class="product-desc">${p.desc}</div><div class="product-meta"><div class="product-price">$ ${p.price}</div><button class="btn-add" onclick="addToCart('${p.name}', ${p.price})">Agregar</button></div></div></div>`;
+                });
+                container.innerHTML = html;
+            });
+        }
+        
+        function switchCategory(categoryName) {
+            document.querySelectorAll('.products-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`cat-${categoryName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
 
-    const catalogContainer = document.getElementById('catalog');
-    const myPhoneNumber = "59899XXXXXXX"; // <--- ¡CAMBIA ESTO POR TU NÚMERO!
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1200);
+        }
 
-    for (const category in backupCatalogData) {
-        const section = document.createElement('section');
-        section.className = 'category-section';
-        section.innerHTML = `<h2>${category.toUpperCase()}</h2><div class="product-grid" id="${category}"></div>`;
-        catalogContainer.appendChild(section);
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+            const wsLink = document.getElementById('whatsapp-link');
+            countEl.innerText = `${cart.length} ${cart.length === 1 ? 'prenda' : 'prendas'}`;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalEl.innerText = `Total: $${total}`;
+            if (cart.length > 0) wsLink.classList.remove('disabled'); else wsLink.classList.add('disabled');
+        }
 
-        const grid = document.getElementById(category);
-        backupCatalogData[category].forEach(item => {
-            const wppMessage = encodeURIComponent(`Hola, quiero pedir: ${item.name}`);
-            const wppLink = `https://wa.me/${myPhoneNumber}?text=${wppMessage}`;
-            
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${item.img}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>${item.desc}</p>
-                <div class="price">$${item.price}</div>
-                <a href="${wppLink}" target="_blank" class="btn-wpp">Pedir por WhatsApp</a>
-            `;
-            grid.appendChild(card);
-        });
-    }
-</script>
+        function sendOrder(e) {
+            if (cart.length === 0) { e.preventDefault(); return; }
+            let itemCounts = {};
+            cart.forEach(item => itemCounts[item.name] = (itemCounts[item.name] || 0) + 1);
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            let text = "*¡Hola NÜMIA! Me gustaría consultar disponibilidad por el siguiente pedido:*\n\n";
+            for (const [name, qty] of Object.entries(itemCounts)) text += `• *${qty}x* ${name}\n`;
+            text += `\nTotal estimado: *$${total}*\n\n_Catálogo Online Nümia._`;
+            document.getElementById('whatsapp-link').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+        }
 
+        renderCatalog();
+    </script>
 </body>
 </html>
