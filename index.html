@@ -7,48 +7,66 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background-color: #faf8fc; color: #4a4a4a; padding-bottom: 100px; }
+        
+        /* Encabezado con Logo */
         header { background-color: #ffffff; padding: 30px 15px; text-align: center; border-bottom: 1px solid #eadef7; box-shadow: 0 2px 10px rgba(162, 131, 219, 0.05); }
-        header img { max-width: 120px; margin-bottom: 10px; border-radius: 50%; } 
+        header img { max-width: 120px; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         header h1 { font-size: 28px; color: #2a2a2a; letter-spacing: 4px; font-weight: 400; text-transform: uppercase; margin-bottom: 5px; }
+        header p { font-size: 13px; color: #8b7ca2; text-transform: uppercase; letter-spacing: 2px; }
         
-        .categories-container { position: sticky; top: 0; background-color: #ffffff; padding: 12px 0; z-index: 10; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid #ebdff9; box-shadow: 0 4px 12px rgba(0,0,0,0.02); text-align: center; }
-        .category-btn { display: inline-block; background: #f5edf1; color: #7b6a93; padding: 10px 20px; margin: 0 6px; border-radius: 25px; border: 1px solid #e4daf2; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+        .categories-container { position: sticky; top: 0; background-color: #ffffff; padding: 12px 0; z-index: 10; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid #ebdff9; box-shadow: 0 4px 12px rgba(0,0,0,0.02); -webkit-overflow-scrolling: touch; text-align: center; }
+        .categories-container::-webkit-scrollbar { display: none; }
+        .category-btn { display: inline-block; background: #f5edf1; color: #7b6a93; padding: 10px 20px; margin: 0 6px; border-radius: 25px; border: 1px solid #e4daf2; font-weight: 500; font-size: 13px; cursor: pointer; transition: all 1s ease; }
         .category-btn.active { background: #a283db; color: #ffffff; border-color: #a283db; box-shadow: 0 3px 8px rgba(162, 131, 219, 0.3); }
-
+        
         .container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
-        .products-section { display: none; }
-        .products-section.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .products-section { display: none; transition: opacity 1s ease; }
+        .products-section.active { display: block; animation: entrance 1s ease-out; }
         
-        .product-card { background: #ffffff; border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid #efeaf6; box-shadow: 0 4px 15px rgba(162, 131, 219, 0.04); cursor: pointer; transition: transform 0.2s; }
-        .product-card:active { transform: scale(0.98); }
-        .product-image { width: 100%; height: 280px; background-size: cover; background-position: center; }
-        .product-info { padding: 15px; }
+        @keyframes entrance { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
+        .product-card { background: #ffffff; border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid #efeaf6; box-shadow: 0 4px 15px rgba(162, 131, 219, 0.04); transition: transform 1s ease; cursor: pointer; }
+        .product-card:hover { transform: scale(1.02); }
+        .product-image { width: 100%; height: 280px; background-color: #f6f3f9; background-size: cover; background-position: center; border-bottom: 1px solid #f1eaf7; transition: transform 1s ease; }
+        
+        .product-info { padding: 20px; }
+        .product-title { font-size: 17px; font-weight: 600; color: #333333; margin-bottom: 6px; }
+        .product-desc { font-size: 13px; color: #7a7a7a; margin-bottom: 15px; line-height: 1.4; }
+        .product-meta { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 18px; color: #845ec2; font-weight: 700; }
+        
+        /* Modal Styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 1000; overflow-y: auto; padding: 20px; }
-        .modal-content { max-width: 400px; margin: auto; }
+        .modal-content { max-width: 400px; margin: 20px auto; }
         .close-btn { font-size: 30px; cursor: pointer; color: #a283db; float: right; }
-        .modal-img { width: 100%; height: 350px; background-size: cover; background-position: center; border-radius: 20px; margin: 20px 0; }
-        .btn-add-lg { width: 100%; background-color: #a283db; color: white; border: none; padding: 15px; border-radius: 25px; font-weight: bold; margin-top: 20px; }
-        
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #ffffff; border-top: 1px solid #ebdff9; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
-        .btn-whatsapp { background-color: #25d366; color: white; text-decoration: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; }
+        .modal-img-container { width: 100%; height: 350px; background-size: cover; background-position: center; border-radius: 20px; margin-bottom: 20px; }
+        .btn-add-lg { width: 100%; background-color: #a283db; color: white; border: none; padding: 15px; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; }
+
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: #ffffff; border-top: 1px solid #ebdff9; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 100; box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.04); }
+        .btn-whatsapp { background-color: #25d366; color: white; text-decoration: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 14px; }
+        .btn-whatsapp.disabled { background-color: #e0dbec; color: #a6a1b5; pointer-events: none; }
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background-color: #4e367c; color: white; padding: 10px 24px; border-radius: 20px; font-size: 13px; opacity: 0; transition: opacity 0.5s ease; z-index: 1000; }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
     <header>
-        <img src="IMG_20260529_230115.jpg" alt="Logo Nümia">
+        <img src="IMG_20260529_230115.jpg" alt="Logo">
         <h1>NÜMIA</h1>
+        <p>Ropa Interior & Lencería</p>
     </header>
-    
+
+    <div class="toast" id="toast">Agregado a tu selección</div>
+
     <div class="categories-container" id="category-nav">
         <button class="category-btn active" onclick="switchCategory('conjuntos', 0)">Conjuntos</button>
-        <button class="category-btn" onclick="switchCategory('bombachas', 1)">Bombachas</button>
+        <button class="category-btn" onclick="switchCategory('bombachas', 1)">Bombachas / Less</button>
         <button class="category-btn" onclick="switchCategory('soutienes', 2)">Soutienes</button>
-        <button class="category-btn" onclick="switchCategory('medias', 3)">Medias</button>
-        <button class="category-btn" onclick="switchCategory('dormir', 4)">Dormir</button>
+        <button class="category-btn" onclick="switchCategory('medias', 3)">Medias / Soquetes</button>
+        <button class="category-btn" onclick="switchCategory('dormir', 4)">Línea Dormir</button>
     </div>
 
+    <!-- Contenedor con swipe -->
     <div class="container" id="swipe-container">
         <div id="cat-conjuntos" class="products-section active"></div>
         <div id="cat-bombachas" class="products-section"></div>
@@ -57,80 +75,145 @@
         <div id="cat-dormir" class="products-section"></div>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
+    <!-- Modal -->
+    <div id="product-modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="modal-img" class="modal-img"></div>
+            <div id="modal-image" class="modal-img-container"></div>
             <h2 id="modal-title"></h2>
-            <p id="modal-desc" style="margin: 15px 0; color: #666;"></p>
-            <button id="modal-btn" class="btn-add-lg">Agregar al carrito</button>
+            <p id="modal-desc" style="margin: 15px 0; color: #666; line-height: 1.6;"></p>
+            <button id="modal-btn" class="btn-add-lg" onclick="addToCartFromModal()">Agregar al carrito</button>
         </div>
     </div>
 
     <div class="cart-bar">
-        <span id="cart-count">0 prendas</span>
-        <a href="#" id="whatsapp-link" class="btn-whatsapp" target="_blank" onclick="sendOrder(event)">Enviar Pedido</a>
+        <div class="cart-summary">
+            <span class="cart-count" id="cart-count">0 prendas</span>
+            <span class="cart-total" id="cart-total">Total: $0</span>
+        </div>
+        <a href="#" id="whatsapp-link" class="btn-whatsapp disabled" target="_blank" onclick="sendOrder(event)">Enviar Pedido</a>
     </div>
 
     <script>
-        const catalogData = {
-            conjuntos: [{ id: 1, name: "Conjunto Encaje", desc: "Talle M", longDesc: "Ideal para destacar tu silueta con comodidad. Su diseño suave lo hace perfecto para uso diario o eventos especiales.", price: 250, img: "https://i.ibb.co/65yYXSY/30060.jpg" }],
-            bombachas: [{ id: 2, name: "Less Encaje", desc: "Talle M-XL", longDesc: "Invisible bajo la ropa. Encaje de alta calidad que no irrita. Siéntete fresca y elegante todo el día.", price: 120, img: "https://i.ibb.co/QFFhWpym/30066.jpg" }],
-            soutienes: [{ id: 3, name: "Soutien Lycra", desc: "Soporte total", longDesc: "Comodidad máxima. Recomendado para mujeres activas que buscan soporte y estilo en una sola prenda.", price: 490, img: "https://images.unsplash.com/photo-1594934984185-da94f061b476?w=600" }],
-            medias: [{ id: 4, name: "Medias Capibara", desc: "Diseño único", longDesc: "Un toque divertido para tu día. Material suave y abrigado, ideal para andar por casa.", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" }],
-            dormir: [{ id: 5, name: "Pijama Satén", desc: "Elegancia total", longDesc: "Para descansar como una reina. Tela fresca que se siente como seda sobre la piel.", price: 980, img: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600" }]
+        const WHATSAPP_PHONE = "59898808548"; 
+        const categories = ['conjuntos', 'bombachas', 'soutienes', 'medias', 'dormir'];
+        let currentCatIndex = 0;
+        let cart = [];
+        let lastSelectedProduct = null;
+
+        const backupCatalogData = {
+            conjuntos: [
+                { id: "co1", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", longDesc: "Este conjunto es tu aliado para sentirte segura y sofisticada. El encaje suave abraza tu piel sin marcar, ideal para esos días donde quieres sentirte especial desde adentro hacia afuera.", price: 250, img: "https://i.ibb.co/65yYXSY/30060.jpg" },
+                { id: "co2", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", longDesc: "Sofisticación pura. Diseñado para resaltar tu silueta, es la opción ideal para un evento especial o para elevar tu ánimo diario con un toque de elegancia.", price: 250, img: "https://i.ibb.co/84KbsCBk/30061.jpg" },
+                { id: "co3", name: "Conjunto de encaje con bralette", desc: "Talle: M<br>Colores: Morado y beige", longDesc: "La combinación perfecta de comodidad y estilo. Su diseño versátil permite usarlo bajo cualquier prenda, brindándote soporte y estilo todo el día.", price: 250, img: "https://i.ibb.co/399nRY0J/30062.jpg" }
+            ],
+            bombachas: [
+                { id: "bo1", name: "Less de encaje", desc: "Talles: M - XL", longDesc: "Esta prenda es un básico infaltable. Diseñada para ser invisible bajo la ropa ajustada, te aporta ese toque de feminidad y frescura necesaria para el uso diario.", price: 120, img: "https://i.ibb.co/QFFhWpym/30066.jpg" },
+                { id: "bo2", name: "Less de encaje", desc: "Talles: M - XL", longDesc: "Calidad y diseño en una sola pieza. La suavidad del encaje previene irritaciones, permitiéndote sentirte cómoda y segura durante tus jornadas largas.", price: 120, img: "https://i.ibb.co/TB7sc6g8/30067.jpg" },
+                { id: "bo3", name: "Less lisa 100% algodón", desc: "Talles: M al XL", longDesc: "Nada supera al algodón en cuanto a salud y comodidad. Esta prenda es la elección inteligente para el cuidado diario, manteniendo todo fresco y natural.", price: 100, img: "https://i.ibb.co/99V4ffzB/30068.jpg" }
+            ],
+            soutienes: [
+                { id: "so1", name: "Soutien Lycra con Encaje", desc: "Detalles de encaje fino.", longDesc: "La resistencia de la lycra se une a la delicadeza del encaje. Ideal para quienes buscan soporte superior sin sacrificar la estética elegante.", price: 490, img: "https://images.unsplash.com/photo-1594934984185-da94f061b476?w=600&auto=format&fit=crop&q=80" }
+            ],
+            medias: [
+                { id: "me1", name: "Medias infantiles", desc: "Varios motivos", longDesc: "Diversión y comodidad para los más chicos. Diseñadas para resistir el juego y el movimiento constante.", price: 100, img: "89b519b9e8134dd884570cd0646ff405_2.png" },
+                { id: "me2", name: "Medias gruesas", desc: "Varios colores", longDesc: "El abrigo que tus pies necesitan en días frescos. Material suave que mantiene el calor sin generar humedad.", price: 170, img: "Gemini_Generated_Image_br1myfbr1myfbr1m.png" },
+                { id: "me3", name: "Medias capibara", desc: "Varios diseños", longDesc: "Un toque de humor y estilo. Perfectas para andar por casa con una sonrisa en los pies.", price: 50, img: "Gemini_Generated_Image_h2i9j5h2i9j5h2i9.png" },
+                { id: "me4", name: "Zoquetes comunes", desc: "Varios colores", longDesc: "Simples, eficaces y necesarias. El complemento ideal para tu calzado deportivo o casual.", price: 50, img: "Gemini_Generated_Image_r4mp9hr4mp9hr4mp.png" },
+                { id: "me5", name: "Medias gruesas individuales", desc: "Varios colores", longDesc: "La calidez justa. Ideales para estar en casa o complementar un look relajado de invierno.", price: 60, img: "Medias gruesas individuales.png" }
+            ],
+            dormir: [
+                { id: "do1", name: "Pijama Satén Short y Musculosa", desc: "Prenda fresca y elegante.", longDesc: "Descansa como una reina. El satén acaricia tu piel y regula la temperatura, garantizando una noche de sueño reparador con estilo.", price: 980, img: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600&auto=format&fit=crop&q=80" }
+            ]
         };
 
-        let currentCatIndex = 0;
-        const categoryKeys = ['conjuntos', 'bombachas', 'soutienes', 'medias', 'dormir'];
-        let cart = [];
-
         function renderCatalog() {
-            categoryKeys.forEach(cat => {
+            categories.forEach(cat => {
                 const container = document.getElementById(`cat-${cat}`);
                 if (!container) return;
-                container.innerHTML = catalogData[cat].map((p, index) => `
-                    <div class="product-card" onclick="openModal('${cat}', ${index})">
+                container.innerHTML = backupCatalogData[cat].map((p, idx) => `
+                    <div class="product-card" onclick="openModal('${cat}', ${idx})">
                         <div class="product-image" style="background-image: url('${p.img}');"></div>
-                        <div class="product-info"><h3>${p.name}</h3><p>${p.desc}</p></div>
+                        <div class="product-info">
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-desc">${p.desc}</div>
+                            <div class="product-meta">
+                                <div class="product-price">$ ${p.price}</div>
+                                <button class="btn-add">Ver Detalle</button>
+                            </div>
+                        </div>
                     </div>`).join('');
             });
         }
 
         function switchCategory(catName, index) {
-            document.querySelectorAll('.products-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.products-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(`cat-${catName}`).classList.add('active');
-            event.target.classList.add('active');
+            
+            // Buscar y activar botón correspondiente por índice
+            const btns = document.querySelectorAll('.category-btn');
+            if(btns[index]) btns[index].classList.add('active');
             currentCatIndex = index;
         }
 
+        // --- Lógica del Modal ---
         function openModal(cat, index) {
-            const p = catalogData[cat][index];
-            document.getElementById('modal-img').style.backgroundImage = `url('${p.img}')`;
+            const p = backupCatalogData[cat][index];
+            lastSelectedProduct = { name: p.name, price: p.price };
+            document.getElementById('modal-image').style.backgroundImage = `url('${p.img}')`;
             document.getElementById('modal-title').innerText = p.name;
             document.getElementById('modal-desc').innerText = p.longDesc;
-            document.getElementById('modal-btn').onclick = () => { addToCart(p.name, p.price); closeModal(); };
-            document.getElementById('modal').style.display = 'block';
+            document.getElementById('product-modal').style.display = 'block';
         }
 
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function closeModal() { document.getElementById('product-modal').style.display = 'none'; }
 
-        function addToCart(name, price) {
-            cart.push({ name, price });
-            document.getElementById('cart-count').innerText = `${cart.length} prendas`;
+        function addToCartFromModal() {
+            if (lastSelectedProduct) {
+                addToCart(lastSelectedProduct.name, lastSelectedProduct.price);
+                closeModal();
+            }
         }
 
-        // Swipe logic
+        // --- Lógica de Swipe ---
         let touchStartX = 0;
         document.getElementById('swipe-container').addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
         document.getElementById('swipe-container').addEventListener('touchend', e => {
             let diff = touchStartX - e.changedTouches[0].screenX;
             if (Math.abs(diff) > 50) {
-                if (diff > 0 && currentCatIndex < 4) switchCategory(categoryKeys[++currentCatIndex], currentCatIndex);
-                else if (diff < 0 && currentCatIndex > 0) switchCategory(categoryKeys[--currentCatIndex], currentCatIndex);
+                if (diff > 0 && currentCatIndex < categories.length - 1) switchCategory(categories[++currentCatIndex], currentCatIndex);
+                else if (diff < 0 && currentCatIndex > 0) switchCategory(categories[--currentCatIndex], currentCatIndex);
             }
         });
+
+        // --- Funciones Carrito ---
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1200);
+        }
+
+        function updateCartUI() {
+            const wsLink = document.getElementById('whatsapp-link');
+            document.getElementById('cart-count').innerText = `${cart.length} ${cart.length === 1 ? 'prenda' : 'prendas'}`;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total').innerText = `Total: $${total}`;
+            if (cart.length > 0) wsLink.classList.remove('disabled'); else wsLink.classList.add('disabled');
+        }
+
+        function sendOrder(e) {
+            if (cart.length === 0) { e.preventDefault(); return; }
+            let itemCounts = {};
+            cart.forEach(item => itemCounts[item.name] = (itemCounts[item.name] || 0) + 1);
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            let text = "*¡Hola NÜMIA! Me gustaría consultar disponibilidad por el siguiente pedido:*\n\n";
+            for (const [name, qty] of Object.entries(itemCounts)) text += `• *${qty}x* ${name}\n`;
+            text += `\nTotal estimado: *$${total}*\n\n_Catálogo Online Nümia._`;
+            document.getElementById('whatsapp-link').href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+        }
 
         renderCatalog();
     </script>
